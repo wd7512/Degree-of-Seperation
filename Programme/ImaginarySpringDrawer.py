@@ -365,9 +365,9 @@ def shiftcoord(cordy,files,sets,tension,spread):
 #drawlines(mainnodes,files,coords)
 pen.clear()
 
-runs=100
-tension=1
-spread=1
+runs=1000
+tension=0.01
+spread=0.0001
 for i in range(runs):
     print(i)
     if i<runs-100:
