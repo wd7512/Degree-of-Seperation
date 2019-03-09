@@ -365,9 +365,9 @@ def shiftcoord(cordy,files,sets,tension,spread):
 #drawlines(mainnodes,files,coords)
 pen.clear()
 
-runs=1000
-tension=0.001
-spread=0.01
+runs=100
+tension=1
+spread=1
 for i in range(runs):
     print(i)
     if i<runs-100:
@@ -396,5 +396,8 @@ drawcircles(minirad,files,mainnodes,coords)
 
 
 
-a=input(':')
+#a=input(':')
 drawlines(mainnodes,files,coords)
+sav=(turtle.getscreen())
+sav.getcanvas().postscript(file=str(runs)+','+str(tension)+','+str(spread)+'.eps')
+sav.clear()
