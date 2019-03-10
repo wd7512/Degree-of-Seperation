@@ -125,35 +125,35 @@ def program(runsPar,tensionPar,spreadPar):
 
 
     for i in range(nosubnodes):
-        pen.penup()
+        #pen.penup()
 
         close=int(1.8**(freqa[i]))
 
         if files[i] in mainnodes:
-            pen.color('blue')
+            #pen.color('blue')
             x=math.sin(angle*i)*(radius-close)
             y=math.cos(angle*i)*(radius-close)
         else:
-            pen.color('orange')
+            #pen.color('orange')
             x=math.sin(angle*i)*(radius-close)
             y=math.cos(angle*i)*(radius-close)
-        if files[i]=='Will Dennis.txt':
-            pen.color('red')
-        if files[i] in ['Pat Nichols.txt','Seb Merricks.txt','Lara Freeman.txt','Oscar Cowen.txt','Adam Robarts.txt','Ollie Rennison.txt','Reuben Heaton.txt']:
-            pen.color('green')
+        #if files[i]=='Will Dennis.txt':
+            #pen.color('red')
+        #if files[i] in ['Pat Nichols.txt','Seb Merricks.txt','Lara Freeman.txt','Oscar Cowen.txt','Adam Robarts.txt','Ollie Rennison.txt','Reuben Heaton.txt']:
+            #pen.color('green')
 
 
         #x=random.randint(-radius,radius)
         #y=random.randint(-radius,radius)
 
         coords.append([x,y])
-        pen.setpos(x,y-minirad)
-        pen.pendown()
+        #pen.setpos(x,y-minirad)
+        #pen.pendown()
 
 
 
 
-        pen.circle(minirad)
+        #pen.circle(minirad)
 
     def oldbuffer(coords,minirad,dist):
         for i in range(len(coords)):
@@ -348,6 +348,6 @@ tensions=[0.1,0.05,0.01,0.005,0.001,0.0005,0.0001,0.00005,0.00001,0.0000005,0.00
 for run in runs:
     for tens in tensions:
         print(str(run)+str(tens)+'Done')
-        for spread in tensions:
-            
-            program(run,tens,spead/10)
+        for spread in tensions[tensions.index(tens):]:
+            pen.clear()
+            program(run,tens,spread/10)
