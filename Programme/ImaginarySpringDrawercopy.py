@@ -348,7 +348,7 @@ runs=[50000,100000,500000,1000000]
 tensions=[0.1,0.05,0.01,0.005,0.001,0.0005,0.0001,0.00005,0.00001,0.0000005,0.0000001]
 for run in runs:
     for tens in tensions:
-        print(str(run)+str(tens)+'Done')
+        print(str(run)+str(tens)+'Start')
         for spread in tensions[tensions.index(tens):]:
             
             program(run,tens,spread/10)
