@@ -274,62 +274,53 @@ def program(runsPar,tensionPar,spreadPar):
 
 
     for i in range(nosubnodes): #for each person
-        #pen.penup()
+        pen.penup()
 
         close=int(1.8**(freqa[i])) #how far in each person is from the centre 
 
         if files[i] in mainnodes: #make mainnodes blue
-            #pen.color('blue')
+            pen.color('blue')
             x=math.sin(angle*i)*(radius-close)
             y=math.cos(angle*i)*(radius-close)
         else:                     #make nodes organse
-            #pen.color('orange')
+            pen.color('orange')
             x=math.sin(angle*i)*(radius-close)
             y=math.cos(angle*i)*(radius-close)
-        #if files[i]=='Will Dennis.txt':
-            #pen.color('red')
-        #if files[i] in ['Pat Nichols.txt','Seb Merricks.txt','Lara Freeman.txt','Oscar Cowen.txt','Adam Robarts.txt','Ollie Rennison.txt','Reuben Heaton.txt']:
-            #pen.color('green')
+        if files[i]=='Will Dennis.txt':
+            pen.color('red')
+        if files[i] in ['Pat Nichols.txt','Seb Merricks.txt','Lara Freeman.txt','Oscar Cowen.txt','Adam Robarts.txt','Ollie Rennison.txt','Reuben Heaton.txt']:
+            pen.color('green')
 
+        '''
+        x=random.randint(-radius,radius)
+        y=random.randint(-radius,radius)
+        #for random starting coords
+        '''
 
-        #x=random.randint(-radius,radius)
-        #y=random.randint(-radius,radius)
-
+        
         coords.append([x,y]) #append coordinates
-        #pen.setpos(x,y-minirad)
-        #pen.pendown()
+        pen.setpos(x,y-minirad)
+        pen.pendown()
 
 
 
 
-        #pen.circle(minirad)
+        pen.circle(minirad)
 
-    
+    pen.clear() #clear canvas of original circle
 
-
-    
-
-
-            
-
-
-
-    
-
-    pen.clear()
-
-    runs=runsPar
-    tension=tensionPar
+    runs=runsPar #assigns variables
+    tension=tensionPar 
     spread=spreadPar
 
-    for i in range(runs):
+    for i in range(runs): 
         #print(i)
         if i<runs-100:
 
-            coords=shiftcoord(coords,files,sets,tension,spread)
+            coords=shiftcoord(coords,files,sets,tension,spread) #update coordinates
 
 
-            if (i+1)%100==0:
+            if (i+1)%100==0: #every 100th do big buffering
                 coords=oldbuffer(coords,minirad,10)
                 coords=oldbuffer(coords,minirad,5)
                 coords=oldbuffer(coords,minirad,3)
@@ -340,13 +331,13 @@ def program(runsPar,tensionPar,spreadPar):
                 sav.getcanvas().postscript(file=str(i+1)+".eps")
                 sav.clear()
                 '''
-        else:
+        else: #last 100 runs buffers more
             coords=oldbuffer(coords,minirad,4)
             coords=shiftcoord(coords,files,sets,tension,spread)
 
 
     pen.clear()
-    drawcircles(minirad,files,mainnodes,coords,pen)
+    drawcircles(minirad,files,mainnodes,coords,pen) #draw circles
 
 
 
