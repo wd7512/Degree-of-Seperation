@@ -102,16 +102,21 @@ def drawcircles(minirad,files,mainnodes,coords,pen):
 
 def drawlines(mainnodes,files,coords,connects,pen):
 
+    
+
     pen.color('Black')
+    count=0
+    
     for node in mainnodes: #for all mainnodes
         pos=coords[files.index(node)] #get coords
         
         
         
         names=connects[mainnodes.index(node)] #get people named
-        
+
         #print(names)
         for name in names: #for each person named
+            count=count+1
             
             moveto=coords[name] #get coords of name
 
@@ -120,7 +125,7 @@ def drawlines(mainnodes,files,coords,connects,pen):
             pen.setpos(pos[0],pos[1]) #draw
             pen.pendown()
             pen.setpos(moveto[0],moveto[1])
-
+    print(count)
 
 def oldbuffer(coords,minirad,dist):
     for i in range(len(coords)): #for each person
@@ -193,15 +198,16 @@ def crosscount(coords,connects,mainnodes): #to count how many crosses there are 
     lines=sorted(lines)
     dupe=[]
     for i in range(len(lines)-1):
-        if lines[i]==lines[i+1]:
+        if abs(lines[i][0]-lines[i+1][0])==0:
             dupe.append(lines[i+1])
-        if lines[i][0]==lines[i+1][0]:
-            if type(lines[i][1])==float and type(lines[i+1][1])==float and abs(1+lines[i][1]*lines[i+1][1])<0.001:
-                dupe.append(lines[i+1])
+    
 
     for line in dupe:
         lines.remove(line)
-
+    '''
+    for line in lines:
+        print(line)
+    '''
     count=0
     for i in range(len(lines)):
         line=lines[i]
@@ -248,6 +254,11 @@ def crosscount(coords,connects,mainnodes): #to count how many crosses there are 
                                 count=count+1
     print(len(lines))
     print(count)
+
+    
+def newcrosscount(connects):
+    True
+
 
 def program(runsPar,tensionPar,spreadPar):
     files=os.listdir() #gets list of all files
@@ -303,6 +314,7 @@ def program(runsPar,tensionPar,spreadPar):
         connects.append(connect)
 
     
+    
     points=[] #a list in the format [number of people who named them,the indexes of people who named them,their name file]
     for i in range(len(files)): 
         count=[]
@@ -322,7 +334,7 @@ def program(runsPar,tensionPar,spreadPar):
             
             index=mainnodes.index(files[i]) #get their index in mainnode list
             
-            sett=connects[index] #get the people they have mentioned
+            sett=connects[index][:] #get the people they have mentioned
 
             for pos in points[i][1]: #for each person get the people that mentioned them
                 
@@ -335,6 +347,8 @@ def program(runsPar,tensionPar,spreadPar):
         else: #if not a mainnode
             
             sets.append(points[i][1]) #just append people that mentioned them
+
+    
 
     for i in range(nosubnodes):
         sets[i]=[len(sets[i]),files[i],sets[i]]
@@ -407,7 +421,8 @@ def program(runsPar,tensionPar,spreadPar):
 
 
         pen.circle(minirad)
-
+    
+    
     a=input(':')
     drawlines(mainnodes,files,coords,connects,pen)
 
@@ -445,13 +460,14 @@ def program(runsPar,tensionPar,spreadPar):
     pen.clear()
     drawcircles(minirad,files,mainnodes,coords,pen) #draw circles
 
-    crosscount(coords,connects,mainnodes)
+    
 
     a=input(':')
     drawlines(mainnodes,files,coords,connects,pen)
+    crosscount(coords,connects,mainnodes)
     #canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
     #pen.clear()
     
 
             
-program(10000,0.001,0.001)
+program(1000,0.01,0.01)
