@@ -195,7 +195,14 @@ def crosscount(coords,connects,mainnodes): #to count how many crosses there are 
         print(du)
     '''
 
+
+
+    
     lines=sorted(lines)
+
+    for line in lines:
+        print(line)
+    
     dupe=[]
     for i in range(len(lines)-1):
         if abs(lines[i][0]-lines[i+1][0])==0:
@@ -204,10 +211,10 @@ def crosscount(coords,connects,mainnodes): #to count how many crosses there are 
 
     for line in dupe:
         lines.remove(line)
-    '''
+    print('=====')
     for line in lines:
         print(line)
-    '''
+    
     count=0
     for i in range(len(lines)):
         line=lines[i]
@@ -256,8 +263,54 @@ def crosscount(coords,connects,mainnodes): #to count how many crosses there are 
     print(count)
 
     
-def newcrosscount(connects):
-    True
+def newcrosscount(connects,mainnodes,files,coords):
+
+    lines=[]
+    
+    for i in range(len(connects)):
+        index=files.index(mainnodes[i])
+        pos1=coords[index]
+        for connect in connects[i]:
+            lines.append([pos1,coords[connect]])
+
+    print(str(len(lines))+'-lines')
+
+    count=0
+    sublines=lines[:]
+    for i in range(len(lines)):
+        
+        line1=lines[i]
+        sublines.remove(line1)
+        
+        for line2 in sublines:
+            
+            point=crosscheck(line1[0],line1[1],line2[0],line2[1])
+            if point[0]!=False:
+                if line1[1][0]<line1[0][0]:
+                    if point[0]<line1[0][0] and point[0]>line1[1][0]:
+                        count=count+1
+                else:
+                    if point[0]>line1[0][0] and point[0]<line1[1][0]:
+                        count=count+1
+        
+
+    print(str(count)+'-crosses')
+
+        
+            
+    
+def crosscheck(point1,point2,point3,point4):
+    grad1=(point2[1]-point1[1])/(point2[0]-point1[0])
+    grad2=(point4[1]-point3[1])/(point4[0]-point3[0])
+
+    if grad1==grad2:
+        return [False,0]
+
+    a=[[-grad1,1],[-grad2,1]]
+    b=[-grad1*point1[0]+point1[1],-grad2*point3[0]+point3[1]]
+    res=np.linalg.solve(a,b)
+
+    return res
 
 
 def program(runsPar,tensionPar,spreadPar):
@@ -428,7 +481,7 @@ def program(runsPar,tensionPar,spreadPar):
 
     pen.clear() #clear canvas of original circle
 
-    crosscount(coords,connects,mainnodes)
+    newcrosscount(connects,mainnodes,files,coords)
 
     runs=runsPar #assigns variables
     tension=tensionPar 
@@ -464,10 +517,10 @@ def program(runsPar,tensionPar,spreadPar):
 
     a=input(':')
     drawlines(mainnodes,files,coords,connects,pen)
-    crosscount(coords,connects,mainnodes)
+    newcrosscount(connects,mainnodes,files,coords)
     #canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
     #pen.clear()
     
 
             
-program(1000,0.01,0.01)
+program(10000,0.0015,0.001)
