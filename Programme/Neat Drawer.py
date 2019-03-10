@@ -153,117 +153,7 @@ def oldbuffer(coords,minirad,dist):
 
     return coords
 
-def crosscount(coords,connects,mainnodes): #to count how many crosses there are yet, ignore for now as it doesnt work
-    lines=[] #[distance,gradient,coordinate]
-    for i in range(len(mainnodes)):
-        pos1=coords[i]
-        x1=pos1[0]
-        y1=pos1[1]
-        
-        for peep in connects[i]:
-
-            pos2=coords[peep]
-            x2=pos2[0]
-            y2=pos2[1]
-
-            if x2==x1:
-                grad='inf'
-            elif y2==y1:
-                grad=0
-            else:
-                grad=(y2-y1)/(x2-x1)
-            line=[math.sqrt((y2-y1)**2+(x2-x1)**2),grad,[x1,y1]]
-            #print(line)
-            lines.append(line)
-    '''
-    dupe=[]
-    for i in range(len(lines)):
-        for k in range(len(lines)): # to compare all lines
-            if i!=k: #if different
-                if lines[i]==lines[k]: #if directly the same
-                    dupe.append(lines[k])
-                elif lines[i][0]==lines[k][0]: # if of same magnitude
-                    print(lines[i])
-                    print(lines[k])
-                            
-                    dupe.append(lines[k])
-
-                        
-    #print(sorted(lines))
-    
-    for du in dupe:
-        print(du)
-    '''
-
-
-
-    
-    lines=sorted(lines)
-
-    for line in lines:
-        print(line)
-    
-    dupe=[]
-    for i in range(len(lines)-1):
-        if abs(lines[i][0]-lines[i+1][0])==0:
-            dupe.append(lines[i+1])
-    
-
-    for line in dupe:
-        lines.remove(line)
-    print('=====')
-    for line in lines:
-        print(line)
-    
-    count=0
-    for i in range(len(lines)):
-        line=lines[i]
-
-        if type(line[1])==float:
-            tocomp=lines[:]
-            
-            tocomp.remove(line)
-            
-
-            #-mx+y=-mx1+y1 [-mx,y]
-
-            pos1=line[2]
-            
-            
-            
-
-            xmin=pos1[0]
-            xmax=math.cos(math.atan(line[1]))*line[0]
-
-            diff=xmax-xmin
-            for comp in tocomp:
-                if type(comp[1])==float:
-
-                    left=[[-line[1],1]]
-                    right=[-line[1]*pos1[0]+pos1[1]]
-                    
-                    pos2=comp[2]
-                    left.append([-comp[1],1])
-                    right.append(-comp[1]*pos2[0]+pos2[1])
-
-                    if left[0][0]-left[1][0]!=0:
-
-                        res=np.linalg.solve(left, right)[0]
-                        #print(res)
-                        
-                        if diff<0:
-                            if res<xmin and res>xmax:
-                                #print(str(xmin)+','+str(res)+','+str(xmax))
-                                count=count+1
-                        else:
-                            if res>xmin and res<xmax:
-                                #print(str(xmin)+','+str(res)+','+str(xmax))
-                                count=count+1
-    print(len(lines))
-    print(count)
-
-    
-def newcrosscount(connects,mainnodes,files,coords):
+def newcrosscount(connects,mainnodes,files,coords,minirad):
 
     lines=[]
     
@@ -282,15 +172,17 @@ def newcrosscount(connects,mainnodes,files,coords):
         line1=lines[i]
         sublines.remove(line1)
         
+        
         for line2 in sublines:
             
             point=crosscheck(line1[0],line1[1],line2[0],line2[1])
             if point[0]!=False:
+                
                 if line1[1][0]<line1[0][0]:
-                    if point[0]<line1[0][0] and point[0]>line1[1][0]:
+                    if point[0]+minirad<line1[0][0] and point[0]-minirad>line1[1][0]:
                         count=count+1
                 else:
-                    if point[0]>line1[0][0] and point[0]<line1[1][0]:
+                    if point[0]-minirad>line1[0][0] and point[0]+minirad<line1[1][0]:
                         count=count+1
         
 
@@ -481,7 +373,7 @@ def program(runsPar,tensionPar,spreadPar):
 
     pen.clear() #clear canvas of original circle
 
-    newcrosscount(connects,mainnodes,files,coords)
+    newcrosscount(connects,mainnodes,files,coords,minirad)
 
     runs=runsPar #assigns variables
     tension=tensionPar 
@@ -517,10 +409,10 @@ def program(runsPar,tensionPar,spreadPar):
 
     a=input(':')
     drawlines(mainnodes,files,coords,connects,pen)
-    newcrosscount(connects,mainnodes,files,coords)
+    newcrosscount(connects,mainnodes,files,coords,minirad)
     #canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
     #pen.clear()
     
 
             
-program(10000,0.0015,0.001)
+program(1000,0.01,0.025)
