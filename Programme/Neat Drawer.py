@@ -4,6 +4,150 @@ import math
 import random
 import canvasvg
 
+def shiftcoord(cordy,files,sets,tension,spread):
+
+    coords=cordy[:] #get coordinates list without editing it
+
+
+    centre=[0,0]
+    for cord in coords: 
+        centre[0]=centre[0]+cord[0]
+        centre[1]=centre[1]+cord[1]
+
+    centre[0]=centre[0]/len(coords)
+    centre[1]=centre[1]/len(coords)#get the mean location of all dots
+
+    #print(centre)
+    
+    new=[] #for new coordinates
+    
+    for i in range(len(files)): #for each person
+        pos1=coords[i]
+        x1=pos1[0]
+        y1=pos1[1] #get coords
+        
+        peeps=sets[i][2] #get people they are connected to
+
+
+        vectors=[] #for all vectors
+        
+        for peep in peeps: #for people connected to
+            
+            pos2=coords[peep]
+            x2=pos2[0] #get coords
+            y2=pos2[1]
+
+            vect=[(x2-x1)*tension,(y2-y1)*tension] #make a vector that is the person to peep multiplied by tension
+
+            vectors.append(vect)
+
+        if x1>0: #get x vector to push away from mean
+            vecx=700+x1-centre[0]
+        else:
+            vecx=-700+x1-centre[0]
+        if y1>0: #get y vector to push away from mean
+            vecy=350+y1-centre[1]
+        else:
+            vecy=-350+y1-centre[0]
+
+
+        vector=[spread*tension*vecx*len(peeps),spread*tension*vecy*len(peeps)]
+        vectors.append(vector) #adds vector that pushes them away from the mean
+
+        xx=x1
+        yy=y1
+        for vector in vectors: #adds up all their x and y vectors to original coordinates
+            xx=xx+vector[0]
+            yy=yy+vector[1]
+
+        
+
+        while xx>700:#makes sure they dont go further than border
+            xx=xx-1
+        while xx<-700:
+            xx=xx+1
+        while yy>350:
+            yy=yy-1
+        while yy<-350:
+            yy=yy+1
+
+
+
+        new.append([xx,yy]) #append new coords
+
+    return new
+
+def drawcircles(minirad,files,mainnodes,coords,pen):
+
+    for i in range(len(files)): #for each person
+        pen.penup()
+        pos=coords[i] #get their coordinates
+        if files[i] in mainnodes: #colour appropirately
+            pen.color('blue')
+        else:
+            pen.color('orange')
+
+        if files[i]=='Will Dennis.txt':
+            pen.color('red')
+        if files[i] in ['Pat Nichols.txt','Seb Merricks.txt','Lara Freeman.txt','Oscar Cowen.txt','Adam Robarts.txt','Ollie Rennison.txt','Reuben Heaton.txt']:
+            pen.color('green')
+
+        x=pos[0]
+        y=pos[1]
+        pen.setpos(x,y-minirad) #draw
+        pen.pendown()
+        pen.circle(minirad)
+
+
+def drawlines(mainnodes,files,coords,connects,pen):
+
+    pen.color('Black')
+    for node in mainnodes: #for all mainnodes
+        pos=coords[files.index(node)] #get coords
+        
+        
+        
+        names=connects[mainnodes.index(node)] #get people named
+        
+        #print(names)
+        for name in names: #for each person named
+            
+            moveto=coords[name] #get coords of name
+
+
+            pen.penup()
+            pen.setpos(pos[0],pos[1]) #draw
+            pen.pendown()
+            pen.setpos(moveto[0],moveto[1])
+
+
+def oldbuffer(coords,minirad,dist):
+    for i in range(len(coords)): #for each person
+
+        pos=coords[i] #get their coordinates
+        x1=pos[0]
+        y1=pos[1]
+        
+        for j in range(len(coords)): #for each person
+
+            if i!=j: #if different people
+
+                coord=coords[j]
+                x2=coord[0] #get their coordinates
+                y2=coord[1]
+
+                while math.sqrt((x2-x1)**2+(y2-y1)**2)<(dist*minirad): #if they are too close
+
+
+                    x1=x1-(x2-x1)*0.1 #shift orginal person away
+                    y1=y1-(y2-y1)*0.1
+                
+        coords[i][0]=x1
+        coords[i][1]=y1 #update coords
+
+    return coords
+
+
 def program(runsPar,tensionPar,spreadPar):
     files=os.listdir() #gets list of all files
     newfiles=[]
@@ -96,49 +240,49 @@ def program(runsPar,tensionPar,spreadPar):
 
     
 
-    #print(str(nosubnodes)+' people')
-    #print(str(nomainnodes)+' participants')
+    print(str(nosubnodes)+' people')
+    print(str(nomainnodes)+' participants')
 
 
 
 
     coords=[] #list for everyones coordinates
 
-    freqa=[]
+    freqa=[] #list corresponding to files which will contain the number of unique connections
     for i in range(nosubnodes):
 
-        close=sets[i][0]
-        #print(close)
-        freqa.append(close)
-
-        #print(close)
+        close=sets[i][0] #get number of unique connections
+        freqa.append(close) #append number unique connections
 
 
 
 
-    freq=[0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+    freq=[0,0,0,0,0,0,0,0,0,0,0,0,0] #list to contain frequencies of unique connections
 
     for re in freqa:
-        #print(re)
-        freq[re]=freq[re]+1
+        freq[re]=freq[re]+1 #count up how many of each frequency
+
+        
     countvar=0
-    for fre in freq:
-        #print(str(fre)+' people with '+str(countvar)+' unique connections')
+    for fre in freq: #displays number of unique connections
+        
+        print(str(fre)+' people with '+str(countvar)+' unique connections')
         countvar=countvar+1
-    #print(freq)
+    
 
 
 
-    for i in range(nosubnodes):
+    for i in range(nosubnodes): #for each person
         #pen.penup()
 
-        close=int(1.8**(freqa[i]))
+        close=int(1.8**(freqa[i])) #how far in each person is from the centre 
 
-        if files[i] in mainnodes:
+        if files[i] in mainnodes: #make mainnodes blue
             #pen.color('blue')
             x=math.sin(angle*i)*(radius-close)
             y=math.cos(angle*i)*(radius-close)
-        else:
+        else:                     #make nodes organse
             #pen.color('orange')
             x=math.sin(angle*i)*(radius-close)
             y=math.cos(angle*i)*(radius-close)
@@ -151,7 +295,7 @@ def program(runsPar,tensionPar,spreadPar):
         #x=random.randint(-radius,radius)
         #y=random.randint(-radius,radius)
 
-        coords.append([x,y])
+        coords.append([x,y]) #append coordinates
         #pen.setpos(x,y-minirad)
         #pen.pendown()
 
@@ -160,156 +304,18 @@ def program(runsPar,tensionPar,spreadPar):
 
         #pen.circle(minirad)
 
-    def oldbuffer(coords,minirad,dist):
-        for i in range(len(coords)):
-
-            pos=coords[i]
-            x1=pos[0]
-            y1=pos[1]
-            #print(2*minirad)
-            for j in range(len(coords)):
-
-                if i!=j:
-
-                    coord=coords[j]
-                    x2=coord[0]
-                    y2=coord[1]
-
-                    while math.sqrt((x2-x1)**2+(y2-y1)**2)<(dist*minirad):
-                        #print(files[i])
-                        #print(files[j])
+    
 
 
-                        x1=x1-(x2-x1)*0.1
-                        y1=y1-(y2-y1)*0.1
-                    #print('====')
-            coords[i][0]=x1
-            coords[i][1]=y1
-
-        return coords
+    
 
 
-    def drawcircles(minirad,files,mainnodes,coords):
-
-        for i in range(len(files)):
-            pen.penup()
-            pos=coords[i]
-            if files[i] in mainnodes:
-                pen.color('blue')
-            else:
-                pen.color('orange')
-
-            if files[i]=='Will Dennis.txt':
-                pen.color('red')
-            if files[i] in ['Pat Nichols.txt','Seb Merricks.txt','Lara Freeman.txt','Oscar Cowen.txt','Adam Robarts.txt','Ollie Rennison.txt','Reuben Heaton.txt']:
-                pen.color('green')
-
-            x=pos[0]
-            y=pos[1]
-            pen.setpos(x,y-minirad)
-            pen.pendown()
-            pen.circle(minirad)
-
-
-    def drawlines(mainnodes,files,coords):
-
-        pen.color('Black')
-        for node in mainnodes:
-            pos=coords[files.index(node)]
-
-            f=open(node,'r')
-            names=f.readlines()
-            for name in names:
-                name=name[0:-1]+'.txt'
-                index=files.index(name)
-                moveto=coords[index]
-
-
-                pen.penup()
-                pen.setpos(pos[0],pos[1])
-                pen.pendown()
-                pen.setpos(moveto[0],moveto[1])
+            
 
 
 
-            f.close()
+    
 
-
-
-    def shiftcoord(cordy,files,sets,tension,spread):
-
-        coords=cordy[:]
-
-
-        centre=[0,0]
-        for cord in coords:
-            centre[0]=centre[0]+cord[0]
-            centre[1]=centre[1]+cord[1]
-
-        centre[0]=centre[0]/len(coords)
-        centre[1]=centre[1]/len(coords)
-
-        #print(centre)
-        new=[]
-        for i in range(len(files)):
-            pos1=coords[i]
-            x1=pos1[0]
-            y1=pos1[1]
-            peeps=sets[i][2]
-
-
-            vectors=[]
-            for peep in peeps:
-                #if files[i]=='Will Dennis.txt':
-                    #print(files[peep])
-                pos2=coords[peep]
-                x2=pos2[0]
-                y2=pos2[1]
-
-                vect=[(x2-x1)*tension,(y2-y1)*tension]
-
-                vectors.append(vect)
-
-            if x1>0:
-                vecx=700+x1-centre[0]
-            else:
-                vecx=-700+x1-centre[0]
-            if y1>0:
-                vecy=350+y1-centre[1]
-            else:
-                vecy=-350+y1-centre[0]
-
-
-            vector=[spread*tension*vecx*len(peeps),spread*tension*vecy*len(peeps)]
-            vectors.append(vector)
-
-            xx=x1
-            yy=y1
-            for vector in vectors:
-                xx=xx+vector[0]
-                yy=yy+vector[1]
-
-            #print(yy)
-
-            while xx>700:
-                xx=xx-1
-            while xx<-700:
-                xx=xx+1
-            while yy>350:
-                yy=yy-1
-            while yy<-350:
-                yy=yy+1
-
-
-            #print([xx-x1,yy-y1])
-            #print(y1)
-
-
-            new.append([xx,yy])
-
-        return new
-
-    #drawlines(mainnodes,files,coords)
     pen.clear()
 
     runs=runsPar
@@ -340,20 +346,15 @@ def program(runsPar,tensionPar,spreadPar):
 
 
     pen.clear()
-    drawcircles(minirad,files,mainnodes,coords)
+    drawcircles(minirad,files,mainnodes,coords,pen)
 
 
 
-    #a=input(':')
-    drawlines(mainnodes,files,coords)
-    canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
-    pen.clear()
+    a=input(':')
+    drawlines(mainnodes,files,coords,connects,pen)
+    #canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
+    #pen.clear()
     
-runs=[50000,100000,500000,1000000]
-tensions=[0.1,0.05,0.01,0.005,0.001,0.0005,0.0001,0.00005,0.00001,0.0000005,0.0000001]
-for run in runs:
-    for tens in tensions:
-        print(str(run)+str(tens)+'Start')
-        for spread in tensions[tensions.index(tens):]:
+
             
-            program(run,tens,spread/10)
+program(1000,0.005,0.001)
