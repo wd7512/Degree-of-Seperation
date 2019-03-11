@@ -368,22 +368,20 @@ def program(runsPar,tensionPar,spreadPar):
         pen.circle(minirad)
     
     
-    a=input(':')
-    drawlines(mainnodes,files,coords,connects,pen)
+    newcrosscount(connects,mainnodes,files,coords,minirad)
 
+    drawlines(mainnodes,files,coords,connects,pen)
+    a=input(':')
     pen.clear() #clear canvas of original circle
 
-    newcrosscount(connects,mainnodes,files,coords,minirad)
+    
 
     runs=runsPar #assigns variables
     tension=tensionPar 
     spread=spreadPar
 
     for i in range(runs):
-        if (i+1)%5==0:
-            drawcircles(minirad,files,mainnodes,coords,pen)
-            canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
-            pen.clear()
+        
         #print(i)
         if i<runs-100:
 
@@ -408,13 +406,13 @@ def program(runsPar,tensionPar,spreadPar):
 
     pen.clear()
     drawcircles(minirad,files,mainnodes,coords,pen) #draw circles
-    canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
+    
     i=i+1
     
 
     a=input(':')
     drawlines(mainnodes,files,coords,connects,pen)
-    canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
+    
             
     newcrosscount(connects,mainnodes,files,coords,minirad)
     #canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
