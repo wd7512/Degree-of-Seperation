@@ -368,7 +368,7 @@ def program(runsPar,tensionPar,spreadPar):
         pen.circle(minirad)
     
     
-    a=input(':')
+    #a=input(':')
     drawlines(mainnodes,files,coords,connects,pen)
 
     pen.clear() #clear canvas of original circle
@@ -391,9 +391,9 @@ def program(runsPar,tensionPar,spreadPar):
 
             
             if (i+1)%100==0: #every 100th do big buffering
-                coords=oldbuffer(coords,minirad,10)
-                coords=oldbuffer(coords,minirad,5)
                 coords=oldbuffer(coords,minirad,3)
+                coords=oldbuffer(coords,minirad,2)
+                coords=oldbuffer(coords,minirad,1)
                 '''
                 pen.clear()
                 drawcircles(minirad,files,mainnodes,coords)
@@ -402,7 +402,7 @@ def program(runsPar,tensionPar,spreadPar):
                 sav.clear()
                 '''
         else: #last 100 runs buffers more
-            coords=oldbuffer(coords,minirad,4)
+            coords=oldbuffer(coords,minirad,5)
             coords=shiftcoord(coords,files,sets,tension,spread)
 
 
@@ -412,12 +412,12 @@ def program(runsPar,tensionPar,spreadPar):
     i=i+1
     
 
-    a=input(':')
+    #a=input(':')
     drawlines(mainnodes,files,coords,connects,pen)
     canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
             
     newcrosscount(connects,mainnodes,files,coords,minirad)
-    #canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
+    canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
     #pen.clear()
     
 
