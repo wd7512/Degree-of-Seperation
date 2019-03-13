@@ -331,12 +331,12 @@ def program(runsPar,tensionPar,spreadPar):
         countvar=countvar+1
     
 
-
+    
 
     for i in range(nosubnodes): #for each person
         pen.penup()
 
-        close=int(1.8**(freqa[i])) #how far in each person is from the centre 
+        close=int(1.69**(freqa[i])) #how far in each person is from the centre 
 
         if files[i] in mainnodes: #make mainnodes blue
             pen.color('blue')
@@ -380,10 +380,10 @@ def program(runsPar,tensionPar,spreadPar):
     spread=spreadPar
 
     for i in range(runs):
-        if (i+1)%5==0:
-            drawcircles(minirad,files,mainnodes,coords,pen)
-            canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
-            pen.clear()
+        #if (i+1)%5==0:
+            #drawcircles(minirad,files,mainnodes,coords,pen)
+            #canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
+            #pen.clear()
         #print(i)
         if i<runs-100:
 
@@ -408,7 +408,7 @@ def program(runsPar,tensionPar,spreadPar):
 
     pen.clear()
     drawcircles(minirad,files,mainnodes,coords,pen) #draw circles
-    canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
+    #canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
     i=i+1
     
 
@@ -417,7 +417,7 @@ def program(runsPar,tensionPar,spreadPar):
     canvasvg.saveall("{},{},{} .svg".format(i,runs,tension,spread),turtle.getcanvas())
             
     newcrosscount(connects,mainnodes,files,coords,minirad)
-    canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
+    #canvasvg.saveall("{},{},{} .svg".format(runs,tension,spread),turtle.getcanvas())
     #pen.clear()
     
 
