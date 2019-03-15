@@ -313,6 +313,7 @@ def program(runsPar,tensionPar,spreadPar):
 
         close=sets[i][0] #get number of unique connections
         freqa.append(close) #append number unique connections
+        
 
 
 
@@ -321,6 +322,7 @@ def program(runsPar,tensionPar,spreadPar):
     freq=[0,0,0,0,0,0,0,0,0,0,0,0,0] #list to contain frequencies of unique connections
 
     for re in freqa:
+        
         freq[re]=freq[re]+1 #count up how many of each frequency
 
         
@@ -368,9 +370,9 @@ def program(runsPar,tensionPar,spreadPar):
         pen.circle(minirad)
     
     
-    #a=input(':')
+    
     drawlines(mainnodes,files,coords,connects,pen)
-
+    #a=input(':')
     pen.clear() #clear canvas of original circle
 
     newcrosscount(connects,mainnodes,files,coords,minirad)

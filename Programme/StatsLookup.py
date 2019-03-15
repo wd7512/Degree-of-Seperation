@@ -234,13 +234,13 @@ def searchlayer(name,files,sets,gens):
     avg=tot/(len(files)-1)
 
     print('Connectedness Score - - - '+str(round(avg,3)))
+    
+    #return avg
 
-    return avg
 
-
-
-name=str(input('Name:'))
-searchlayer(name,files,sets,10)
+while True:
+    name=str(input('Name:'))
+    searchlayer(name,files,sets,10)
 
 
 

@@ -256,7 +256,7 @@ for filename in files:
     filename=filename[0:-4]
     avgscores.append(searchlayer(filename,files,sets,10))
 
-avgscores=sorted(avgscores)[6:] #removes rohan - disconnected
+avgscores=sorted(avgscores)[12:] #removes rohan - disconnected
     
 top=max(avgscores)
 bot=min(avgscores)
@@ -282,14 +282,14 @@ for num in avgscores:
 
 
 
-name=str(input('Name:'))
-searchlayer(name,files,sets,10)
+#name=str(input('Name:'))
+#searchlayer(name,files,sets,10)
 
 
 
-'''
+
 print('Standard Deviation: '+str(round(standdev(avgscores)[0],3)))
 print('Mean              : '+str(round(standdev(avgscores)[1],3)))
 plt.plot(xax,avgfreq)
 plt.show()
-'''
+
